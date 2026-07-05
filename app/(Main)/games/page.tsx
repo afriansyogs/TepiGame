@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function GamesPage() {
@@ -102,9 +103,12 @@ export default function GamesPage() {
                 whileTap={{ scale: 0.98 }}
                 className="mt-8 inline-block"
               >
-                <button className="bg-[#9B00E8] hover:bg-[#8500c7] text-white px-8 py-4 rounded-full font-bold text-base md:text-lg transition-all shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/35 cursor-pointer">
+                <Link
+                  href="/games/meteor-games"
+                  className="inline-block bg-[#9B00E8] hover:bg-[#8500c7] text-white px-8 py-4 rounded-full font-bold text-base md:text-lg transition-all shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/35"
+                >
                   Main Sekarang
-                </button>
+                </Link>
               </motion.div>
             </motion.div>
             <motion.div
