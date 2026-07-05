@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "name": "Mobile Legends: Bang Bang",
+    "developer": "Moonton",
+    "publisher": "Moonton",
+    "isPopular": true,
+    "isPromo": true,
+    "category": "Mobile",
+    "imageUrl": "/img/mobile_legends.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Free Fire",
+    "developer": "111 Dots Studio",
+    "publisher": "Garena",
+    "isPopular": true,
+    "isPromo": false,
+    "category": "Mobile",
+    "imageUrl": "/img/free_fire.jpg"
+  },
+  {
+    "id": 3,
+    "name": "PUBG Mobile",
+    "developer": "LightSpeed & Quantum Studio",
+    "publisher": "Tencent Games",
+    "isPopular": true,
+    "isPromo": true,
+    "category": "Mobile",
+    "imageUrl": "/img/pubg_mobile.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Honor of Kings",
+    "developer": "TiMi Studio Group",
+    "publisher": "Tencent Games",
+    "isPopular": true,
+    "isPromo": false,
+    "category": "Mobile",
+    "imageUrl": "/img/honor_of_kings.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Call of Duty: Mobile",
+    "developer": "TiMi Studio Group",
+    "publisher": "Activision",
+    "isPopular": true,
+    "isPromo": false,
+    "category": "Mobile",
+    "imageUrl": "/img/call_of_duty_mobile.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Roblox",
+    "developer": "Roblox Corporation",
+    "publisher": "Roblox Corporation",
+    "isPopular": true,
+    "isPromo": false,
+    "category": "PC",
+    "imageUrl": "/img/roblox.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Minecraft",
+    "developer": "Mojang Studios",
+    "publisher": "Xbox Game Studios",
+    "isPopular": true,
+    "isPromo": false,
+    "category": "PC",
+    "imageUrl": "/img/minecraft.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Valorant",
+    "developer": "Riot Games",
+    "publisher": "Riot Games",
+    "isPopular": true,
+    "isPromo": true,
+    "category": "PC",
+    "imageUrl": "/img/valorant.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Dota 2",
+    "developer": "Valve",
+    "publisher": "Valve",
+    "isPopular": true,
+    "isPromo": false,
+    "category": "PC",
+    "imageUrl": "/img/dota_2.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Counter-Strike 2",
+    "developer": "Valve",
+    "publisher": "Valve",
+    "isPopular": true,
+    "isPromo": false,
+    "category": "PC",
+    "imageUrl": "/img/counter_strike_2.jpg"
+  },
+  {
+    "id": 11,
+    "name": "Genshin Impact",
+    "developer": "miHoYo",
+    "publisher": "HoYoverse",
+    "isPopular": false,
+    "isPromo": true,
+    "category": "Mobile",
+    "imageUrl": "/img/genshin_impact.jpg"
+  },
+  {
+    "id": 12,
+    "name": "Honkai: Star Rail",
+    "developer": "miHoYo",
+    "publisher": "HoYoverse",
+    "isPopular": false,
+    "isPromo": false,
+    "category": "Mobile",
+    "imageUrl": "/img/honkai_star_rail.jpg"
+  },
+  {
+    "id": 13,
+    "name": "League of Legends",
+    "developer": "Riot Games",
+    "publisher": "Riot Games",
+    "isPopular": false,
+    "isPromo": true,
+    "category": "PC",
+    "imageUrl": "/img/league_of_legends.jpg"
+  },
+  {
+    "id": 14,
+    "name": "eFootball",
+    "developer": "Konami",
+    "publisher": "Konami",
+    "isPopular": false,
+    "isPromo": false,
+    "category": "Mobile",
+    "imageUrl": "/img/moba_cover.jpg"
+  },
+  {
+    "id": 15,
+    "name": "EA SPORTS FC Online",
+    "developer": "EA Spearhead",
+    "publisher": "Electronic Arts",
+    "isPopular": false,
+    "isPromo": false,
+    "category": "PC",
+    "imageUrl": "/img/moba_cover.jpg"
+  },
+  {
+    "id": 16,
+    "name": "Point Blank",
+    "developer": "Zepetto",
+    "publisher": "Zepetto",
+    "isPopular": false,
+    "isPromo": true,
+    "category": "PC",
+    "imageUrl": "/img/shooter_cover.jpg"
+  },
+  {
+    "id": 17,
+    "name": "Arena Breakout",
+    "developer": "MoreFun Studios",
+    "publisher": "Tencent Games",
+    "isPopular": false,
+    "isPromo": false,
+    "category": "Mobile",
+    "imageUrl": "/img/shooter_cover.jpg"
+  },
+  {
+    "id": 18,
+    "name": "Delta Force",
+    "developer": "Team Jade",
+    "publisher": "Level Infinite",
+    "isPopular": false,
+    "isPromo": false,
+    "category": "PC",
+    "imageUrl": "/img/shooter_cover.jpg"
+  },
+  {
+    "id": 19,
+    "name": "Blood Strike",
+    "developer": "NetEase Games",
+    "publisher": "NetEase Games",
+    "isPopular": false,
+    "isPromo": true,
+    "category": "Mobile",
+    "imageUrl": "/img/shooter_cover.jpg"
+  },
+  {
+    "id": 20,
+    "name": "Ragnarok Origin",
+    "developer": "GRAVITY",
+    "publisher": "GRAVITY",
+    "isPopular": false,
+    "isPromo": false,
+    "category": "Mobile",
+    "imageUrl": "/img/anime_cover.jpg"
+  }
+]

@@ -1,4 +1,5 @@
 import Navbar from "@/components/common/Navbar";
+import Footer from "@/components/common/Footer";
 
 export default function MainLayout({
   children,
@@ -8,7 +9,8 @@ export default function MainLayout({
   return (
     <>
       <Navbar />
-      <main className="flex-grow bg-[#FAFCFF]">{children}</main>
+      <main className="flex-grow bg-[#FAFCFF] overflow-x-hidden">{children}</main>
+      <Footer />
     </>
   );
 }

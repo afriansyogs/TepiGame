@@ -24,6 +24,7 @@ export default function HeroBanner() {
     <section className="w-full pt-8 pb-4">
       <div className="relative mx-auto w-[90%] max-w-6xl">
         <div className="relative w-full aspect-[16/8] sm:aspect-[21/8] md:aspect-[21/7] lg:aspect-[3/1] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden bg-gray-900 shadow-2xl">
+          <h1 className="sr-only">TepiGame - Fastest and Most Trusted Game Top-Up Platform</h1>
           <AnimatePresence mode="popLayout">
             <motion.div
               key={currentIndex}
