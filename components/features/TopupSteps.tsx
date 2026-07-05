@@ -56,7 +56,7 @@ const itemVariants: Variants = {
 
 export default function TopupSteps() {
   return (
-    <section className="w-full py-16 md:py-24 bg-[#F9EEFF] overflow-hidden">
+    <section className="w-full py-16 md:py-24 bg-[#F9EEFF] overflow-hidden mt-2 md:mt-8 lg:mt-12 xl:mt-20">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
