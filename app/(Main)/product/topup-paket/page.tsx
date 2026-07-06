@@ -104,7 +104,7 @@ export default function TopupPaketPage() {
       setVoucherSuccess("Voucher TEPIHEMAT berhasil diterapkan! Diskon 15%!");
     } else {
       setAppliedVoucher(null);
-      setVoucherError("Voucher tidak valid. Gunakan kode: TEPIHEMAT");
+      setVoucherError("Voucher tidak valid.");
     }
   };
 
