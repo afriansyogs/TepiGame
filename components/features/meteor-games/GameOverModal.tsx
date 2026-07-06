@@ -91,7 +91,7 @@ export default function GameOverModal({ finalScore, highScore }: GameOverModalPr
           </div>
           {finalScore >= highScore && highScore > 0 && (
             <span className="text-xs font-bold text-purple-500 mt-1">
-              🎉 New High Score!
+              New High Score!
             </span>
           )}
         </motion.div>

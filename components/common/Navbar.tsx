@@ -41,7 +41,7 @@ export default function Navbar() {
   }, [isOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md shadow-lg shadow-gray-100">
+    <header className="fixed top-0 left-0 right-0 z-[100] w-full border-b border-gray-100 bg-white/95 backdrop-blur-md shadow-lg shadow-gray-100">
       <div className="mx-auto flex h-20 max-w-[90%] items-center justify-between px-6 md:px-8">
         <Link href="/" className="flex items-center">
           <Image

@@ -110,7 +110,7 @@ export default function ProductPage() {
             {filteredGames.map((game) => (
               <Link
                 key={game.id}
-                href={`/games/${game.name.toLowerCase().replace(/\s+/g, "-")}`}
+                href={game.link || "#"}
                 className="group relative w-full overflow-hidden rounded-2xl bg-gray-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#9B00E8]/30 ring-1 ring-white/10 hover:ring-[#9B00E8]/50"
               >
                 <div className="relative aspect-[3/4] w-full overflow-hidden">

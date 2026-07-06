@@ -9,7 +9,7 @@ export default function MainLayout({
   return (
     <>
       <Navbar />
-      <main className="flex-grow bg-[#FAFCFF] overflow-x-hidden">{children}</main>
+      <main className="flex-grow bg-[#FAFCFF] overflow-x-hidden pt-20">{children}</main>
       <Footer />
     </>
   );
