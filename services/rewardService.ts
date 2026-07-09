@@ -64,3 +64,13 @@ export async function redeemReward(uid: string, rewardId: string): Promise<void>
     });
   });
 }
+
+export async function getUserVouchers(uid: string): Promise<Voucher[]> {
+  const vouchersRef = collection(db, `users/${uid}/vouchers`);
+  const snapshot = await getDocs(vouchersRef);
+  
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Voucher[];
+}
