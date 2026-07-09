@@ -3,19 +3,15 @@
 import { useState, useMemo, useEffect, ComponentType } from "react";
 import { useParams } from "next/navigation";
 import { getGameBySlug, getGamePackages, Game, DiamondPackage } from "@/services/gameService";
-import { addPoints } from "@/services/userService";
-import { auth } from "@/lib/firebase";
 import Image from "next/image";
+import PaymentModal from "@/components/features/transactions/PaymentModal";
 import { 
   CheckCircle2, 
   AlertCircle, 
-  HelpCircle, 
   QrCode, 
   Wallet, 
   CreditCard, 
   ShoppingBag, 
-  Percent, 
-  ChevronRight,
   Info
 } from "lucide-react";
 
@@ -46,6 +42,7 @@ export default function TopupPaketPage() {
   const [appliedVoucher, setAppliedVoucher] = useState<string | null>(null);
   const [voucherError, setVoucherError] = useState<string | null>(null);
   const [voucherSuccess, setVoucherSuccess] = useState<string | null>(null);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [checkoutSuccess, setCheckoutSuccess] = useState<boolean>(false);
@@ -151,15 +148,7 @@ export default function TopupPaketPage() {
       return;
     }
 
-    try {
-      if (auth.currentUser && selectedPackage.pointsReward) {
-        await addPoints(auth.currentUser.uid, selectedPackage.pointsReward);
-      }
-      setCheckoutSuccess(true);
-    } catch (error) {
-      console.error(error);
-      setCheckoutError("Terjadi kesalahan sistem. Silakan coba lagi.");
-    }
+    setIsPaymentModalOpen(true);
   };
 
   if (isLoading) {
@@ -592,6 +581,21 @@ export default function TopupPaketPage() {
           </div>
         </div>
       </div>
+
+      {game && selectedPackage && selectedPaymentId && (
+        <PaymentModal 
+          isOpen={isPaymentModalOpen}
+          onClose={() => setIsPaymentModalOpen(false)}
+          gameName={game.name}
+          gameImageUrl={game.imageUrl}
+          packageName={`${selectedPackage.amount} ${selectedPackage.itemName || "Diamonds"}`}
+          totalAmount={finalPrice}
+          paymentMethodName={payments.find(p => p.id === selectedPaymentId)?.name || ""}
+          paymentMethodId={selectedPaymentId}
+          gameUserId={userId}
+          gameZoneId={zoneId || undefined}
+        />
+      )}
     </div>
   );
 }

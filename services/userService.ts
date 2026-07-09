@@ -7,6 +7,7 @@ export interface UserProfile {
   email: string | null;
   displayName: string | null;
   photoURL: string | null;
+  phoneNumber: string | null;
   pointsBalance: number;
   lifetimePoints: number;
   role: "user" | "admin";
@@ -25,6 +26,7 @@ export async function syncUserProfile(user: User): Promise<void> {
       email: user.email,
       displayName: user.displayName || user.email?.split("@")[0] || null,
       photoURL: user.photoURL,
+      phoneNumber: user.phoneNumber || null,
       pointsBalance: 0,
       lifetimePoints: 0,
       role: "user",
@@ -38,6 +40,11 @@ export async function syncUserProfile(user: User): Promise<void> {
       lastLoginAt: serverTimestamp(),
     });
   }
+}
+
+export async function updateUserProfile(uid: string, data: Partial<Omit<UserProfile, "uid" | "createdAt" | "pointsBalance" | "lifetimePoints" | "role" | "meteorGameHighScore" | "lastLoginAt">>): Promise<void> {
+  const userRef = doc(db, "users", uid);
+  await updateDoc(userRef, data);
 }
 
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
