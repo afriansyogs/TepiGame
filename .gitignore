@@ -40,3 +40,9 @@ RULES.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+firebase_schema_recommendations.md
+firebase-admin.ts
+serviceAccountKey.json
+seedDatabase.js
+seedRewards.js

@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Search, Loader2, Frown } from "lucide-react";
-import gamesData from "@/data/games.json";
 import Link from "next/link";
+import { getAllGames, Game } from "@/services/gameService";
 
 // Custom Debounce for search
 function useDebounce<T>(value: T, delay: number): T {
@@ -21,13 +21,29 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export default function ProductPage() {
+  const [games, setGames] = useState<Game[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedQuery = useDebounce(searchQuery, 500);
   const [activeFilter, setActiveFilter] = useState("Semua");
   
   const filters = ["Semua", "Populer", "Promo", "Mobile", "PC"];
 
-  const filteredGames = gamesData.filter((game) => {
+  useEffect(() => {
+    async function loadGames() {
+      try {
+        const data = await getAllGames();
+        setGames(data);
+      } catch (error) {
+        console.error("Failed to load games:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadGames();
+  }, []);
+
+  const filteredGames = games.filter((game) => {
     const matchesSearch = game.name.toLowerCase().includes(debouncedQuery.toLowerCase());
     
     let matchesFilter = true;
@@ -39,7 +55,7 @@ export default function ProductPage() {
     return matchesSearch && matchesFilter;
   });
 
-  const isSearching = searchQuery !== debouncedQuery;
+  const isSearching = isLoading || (searchQuery !== debouncedQuery);
 
   return (
     <div className="w-full min-h-screen pb-24">

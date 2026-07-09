@@ -1,6 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { getGameBySlug, getGamePackages, Game, DiamondPackage } from "@/services/gameService";
+import { addPoints } from "@/services/userService";
+import { auth } from "@/lib/firebase";
 import Image from "next/image";
 import { 
   CheckCircle2, 
@@ -15,14 +19,7 @@ import {
   Info
 } from "lucide-react";
 
-interface DiamondPackage {
-  id: number;
-  amount: number;
-  bonus: number;
-  price: number;
-  originalPrice?: number;
-  tag?: "PROMO" | "BEST SELLER" | "";
-}
+
 
 interface PaymentMethod {
   id: string;
@@ -34,12 +31,17 @@ interface PaymentMethod {
 }
 
 export default function TopupPaketPage() {
+  const { slug } = useParams() as { slug: string };
+  const [game, setGame] = useState<Game | null>(null);
+  const [packages, setPackages] = useState<DiamondPackage[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [userId, setUserId] = useState("");
   const [zoneId, setZoneId] = useState("");
   const [voucherCode, setVoucherCode] = useState("");
   const [email, setEmail] = useState("");
 
-  const [selectedPackageId, setSelectedPackageId] = useState<number | null>(null);
+  const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null);
   const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null);
   const [appliedVoucher, setAppliedVoucher] = useState<string | null>(null);
   const [voucherError, setVoucherError] = useState<string | null>(null);
@@ -48,24 +50,24 @@ export default function TopupPaketPage() {
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [checkoutSuccess, setCheckoutSuccess] = useState<boolean>(false);
 
-  const packages: DiamondPackage[] = [
-    { id: 1, amount: 5, bonus: 1, price: 1423, originalPrice: 1575, tag: "PROMO" },
-    { id: 2, amount: 12, bonus: 2, price: 3500, tag: "" },
-    { id: 3, amount: 50, bonus: 5, price: 14200, tag: "" },
-    { id: 4, amount: 85, bonus: 8, price: 21850, tag: "BEST SELLER" },
-    { id: 5, amount: 170, bonus: 16, price: 43700, originalPrice: 65800, tag: "PROMO" },
-    { id: 6, amount: 296, bonus: 40, price: 76000, originalPrice: 114300, tag: "BEST SELLER" },
-    { id: 7, amount: 367, bonus: 34, price: 95000, tag: "" },
-    { id: 8, amount: 503, bonus: 53, price: 125000, tag: "" },
-    { id: 9, amount: 774, bonus: 74, price: 190000, tag: "" },
-    { id: 10, amount: 926, bonus: 86, price: 235000, tag: "" },
-    { id: 11, amount: 1159, bonus: 109, price: 285000, tag: "" },
-    { id: 12, amount: 1446, bonus: 146, price: 357000, originalPrice: 47200, tag: "PROMO" },
-    { id: 13, amount: 1708, bonus: 158, price: 425000, tag: "" },
-    { id: 14, amount: 2010, bonus: 210, price: 495000, tag: "" },
-    { id: 15, amount: 3000, bonus: 300, price: 730000, tag: "PROMO" },
-    { id: 16, amount: 4000, bonus: 450, price: 980000, tag: "BEST SELLER" }
-  ];
+  useEffect(() => {
+    async function loadData() {
+      if (!slug) return;
+      try {
+        const g = await getGameBySlug(slug);
+        if (g) {
+          setGame(g);
+          const pkgs = await getGamePackages(slug);
+          setPackages(pkgs);
+        }
+      } catch (error) {
+        console.error("Failed to load game data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, [slug]);
 
   const payments: PaymentMethod[] = [
     { id: "qris", name: "QRIS", type: "E-Wallet", icon: QrCode, fee: 0, status: "active" },
@@ -127,7 +129,7 @@ export default function TopupPaketPage() {
     return base + fee;
   }, [selectedPackage, selectedPaymentId, appliedVoucher]);
 
-  const handleTopupSubmit = () => {
+  const handleTopupSubmit = async () => {
     setCheckoutError(null);
     setCheckoutSuccess(false);
 
@@ -135,15 +137,12 @@ export default function TopupPaketPage() {
       setCheckoutError("User ID dan Zone ID harus diisi.");
       return;
     }
-    if (!isUserIdValid) {
-      setCheckoutError("User ID tidak valid (harus 8-10 digit angka).");
+    if (!isUserIdValid || !isZoneIdValid) {
+      setCheckoutError("User ID atau Zone ID tidak valid.");
       return;
     }
-    if (!isZoneIdValid) {
-      setCheckoutError("Zone ID tidak valid (harus 4 digit angka).");
-      return;
-    }
-    if (!selectedPackageId) {
+
+    if (!selectedPackage) {
       setCheckoutError("Silakan pilih nominal top up.");
       return;
     }
@@ -152,8 +151,33 @@ export default function TopupPaketPage() {
       return;
     }
 
-    setCheckoutSuccess(true);
+    try {
+      if (auth.currentUser && selectedPackage.pointsReward) {
+        await addPoints(auth.currentUser.uid, selectedPackage.pointsReward);
+      }
+      setCheckoutSuccess(true);
+    } catch (error) {
+      console.error(error);
+      setCheckoutError("Terjadi kesalahan sistem. Silakan coba lagi.");
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#9B00E8]"></div>
+      </div>
+    );
+  }
+
+  if (!game) {
+    return (
+      <div className="w-full min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">
+        <h2 className="text-2xl font-black text-gray-800">Game Tidak Ditemukan</h2>
+        <p className="text-gray-500">Game yang Anda cari tidak tersedia atau URL salah.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen bg-gray-50 py-12">
@@ -161,28 +185,28 @@ export default function TopupPaketPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-4 flex flex-col gap-6">
             <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 p-5">
-              <div className="relative w-full aspect-[21/10] rounded-2xl overflow-hidden mb-5">
+              <div className="relative w-full aspect-[21/10] rounded-2xl overflow-hidden mb-5 bg-gray-900">
                 <Image 
-                  src="/img/ml-banner.svg" 
-                  alt="Mobile Legends Banner"
+                  src={game.imageUrl} 
+                  alt={`${game.name} Banner`}
                   fill
-                  className="object-cover"
+                  className="object-cover opacity-80"
                   priority
                 />
               </div>
 
               <div className="flex items-center gap-4 mb-6">
-                <div className="relative w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 border border-gray-100">
+                <div className="relative w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0 border border-gray-100 bg-gray-900">
                   <Image 
-                    src="/img/ml-logo.svg" 
-                    alt="Mobile Legends Logo"
+                    src={game.imageUrl} 
+                    alt={`${game.name} Logo`}
                     fill
                     className="object-cover"
                   />
                 </div>
                 <div>
-                  <h1 className="text-xl font-black text-gray-900 leading-tight">Mobile Legends</h1>
-                  <p className="text-sm font-semibold text-gray-400">Moonton</p>
+                  <h1 className="text-xl font-black text-gray-900 leading-tight">{game.name}</h1>
+                  <p className="text-sm font-semibold text-gray-400">{game.publisher}</p>
                 </div>
               </div>
 
