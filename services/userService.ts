@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, updateDoc, increment, serverTimestamp } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, increment, serverTimestamp, FieldValue } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { User } from "firebase/auth";
 
@@ -11,8 +11,8 @@ export interface UserProfile {
   lifetimePoints: number;
   role: "user" | "admin";
   meteorGameHighScore: number;
-  createdAt: any;
-  lastLoginAt: any;
+  createdAt: FieldValue | Date;
+  lastLoginAt: FieldValue | Date;
 }
 
 export async function syncUserProfile(user: User): Promise<void> {

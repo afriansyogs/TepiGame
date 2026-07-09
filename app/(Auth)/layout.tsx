@@ -16,7 +16,7 @@ export default function AuthLayout({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setTimeout(() => setMounted(true), 0);
   }, []);
 
   const isLogin = pathname === "/login";

@@ -84,7 +84,7 @@ export default function Reviews() {
               </div>
 
               <div className="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-black select-none pointer-events-none z-0">
-                "
+                &quot;
               </div>
               <div className="flex flex-col sm:flex-row justify-between sm:items-start mb-4 gap-2 relative z-10 pl-14 sm:pl-16">
                 <div>
@@ -113,7 +113,7 @@ export default function Reviews() {
               </div>
 
               <p className="text-gray-600 font-medium leading-relaxed mt-2 relative z-10 sm:text-lg">
-                "{review.comment}"
+                &quot;{review.comment}&quot;
               </p>
 
               <div className="absolute -bottom-3 right-10 w-8 h-8 bg-white border-b border-r border-gray-100 rounded-sm rotate-45 -z-10 shadow-[8px_8px_16px_-8px_var(--tw-shadow-color)]" style={{ '--tw-shadow-color': 'rgba(0,0,0,0.05)' } as React.CSSProperties} />

@@ -62,8 +62,10 @@ export default function MeteorGamesPage() {
   const [finalScore, setFinalScore] = useState(0);
 
   useEffect(() => {
-    let localHigh = getHighScore();
-    setHighScore(localHigh);
+    const localHigh = getHighScore();
+    if (localHigh > 0) {
+      setTimeout(() => setHighScore(localHigh), 0);
+    }
 
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -88,6 +90,8 @@ export default function MeteorGamesPage() {
   const spawnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countdownTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const gameTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const gameLoopRef = useRef<() => void>(() => {});
+  const spawnMeteorRef = useRef<() => void>(() => {});
 
   const scoreRef = useRef(0);
   const timeRef = useRef(GAME_DURATION_S);
@@ -234,8 +238,12 @@ export default function MeteorGamesPage() {
       SPAWN_INTERVAL_MS_MIN,
       SPAWN_INTERVAL_MS_START - elapsed * 8
     );
-    spawnTimerRef.current = setTimeout(spawnMeteor, interval);
+    spawnTimerRef.current = setTimeout(spawnMeteorRef.current, interval);
   }, []);
+
+  useEffect(() => {
+    spawnMeteorRef.current = spawnMeteor;
+  }, [spawnMeteor]);
 
   const gameLoop = useCallback(() => {
     if (gameStateRef.current !== "PLAYING") return;
@@ -315,8 +323,12 @@ export default function MeteorGamesPage() {
       meteorsRef.current = meteorsRef.current.filter((_, i) => !toRemove.includes(i));
     }
 
-    rafRef.current = requestAnimationFrame(gameLoop);
+    rafRef.current = requestAnimationFrame(gameLoopRef.current);
   }, [endGame]);
+
+  useEffect(() => {
+    gameLoopRef.current = gameLoop;
+  }, [gameLoop]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -424,7 +436,6 @@ export default function MeteorGamesPage() {
     refreshArenaSize();
 
     let c = 3;
-    setCountdown(c);
 
     countdownTimerRef.current = setInterval(() => {
       c -= 1;

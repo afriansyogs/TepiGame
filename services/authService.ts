@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  User,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { auth } from "@/lib/firebase";
@@ -36,7 +37,7 @@ const getAuthErrorMessage = (error: unknown): string => {
   return "Terjadi kesalahan yang tidak diketahui.";
 };
 
-const setSessionCookie = async (user: any) => {
+const setSessionCookie = async (user: User) => {
   const idToken = await user.getIdToken();
   const response = await fetch("/api/auth/login", {
     method: "POST",
@@ -55,9 +56,12 @@ export const signInWithGoogle = async () => {
   try {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
-    await syncUserProfile(result.user);
-    await setSessionCookie(result.user);
-    return result.user;
+    if (result.user) {
+      await syncUserProfile(result.user);
+      await setSessionCookie(result.user);
+      return result.user;
+    }
+    return null;
   } catch (error: unknown) {
     throw new Error(getAuthErrorMessage(error));
   }
