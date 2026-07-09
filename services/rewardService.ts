@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc, runTransaction, serverTimestamp } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, runTransaction, serverTimestamp, FieldValue } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
 export interface Reward {
@@ -15,7 +15,7 @@ export interface Voucher {
   rewardId: string;
   name: string;
   voucherCode: string;
-  redeemedAt: any;
+  redeemedAt: FieldValue | Date | null;
   isUsed: boolean;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, ComponentType } from "react";
 import { useParams } from "next/navigation";
 import { getGameBySlug, getGamePackages, Game, DiamondPackage } from "@/services/gameService";
 import { addPoints } from "@/services/userService";
@@ -25,7 +25,7 @@ interface PaymentMethod {
   id: string;
   name: string;
   type: "E-Wallet" | "Virtual Account";
-  icon: any;
+  icon: ComponentType<{ className?: string }>;
   fee: number;
   status: "active" | "maintenance";
 }
@@ -227,7 +227,7 @@ export default function TopupPaketPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#9B00E8]/10 text-[#9B00E8] font-bold text-xs flex items-center justify-center">4</span>
-                    <p className="text-sm text-gray-600 font-medium">Klik "Top Up Sekarang" & selesaikan pembayaran.</p>
+                    <p className="text-sm text-gray-600 font-medium">Klik &quot;Top Up Sekarang&quot; &amp; selesaikan pembayaran.</p>
                   </li>
                 </ol>
               </div>

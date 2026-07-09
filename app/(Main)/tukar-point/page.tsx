@@ -17,19 +17,6 @@ export default function TukarPointPage() {
   const [redeemingId, setRedeemingId] = useState<string | null>(null);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        await loadUserData(currentUser.uid);
-      } else {
-        setProfile(null);
-        setIsLoading(false);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
   const loadUserData = async (uid: string) => {
     try {
       const userProfile = await getUserProfile(uid);
@@ -43,6 +30,19 @@ export default function TukarPointPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        await loadUserData(currentUser.uid);
+      } else {
+        setProfile(null);
+        setIsLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleRedeem = async (reward: Reward) => {
     if (!user || !profile) return;
@@ -60,8 +60,9 @@ export default function TukarPointPage() {
       setProfile(prev => prev ? { ...prev, pointsBalance: prev.pointsBalance - reward.pointsRequired } : null);
       
       setMessage({ text: `Berhasil menukarkan: ${reward.name}! Cek menu Voucher.`, type: "success" });
-    } catch (error: any) {
-      setMessage({ text: error.message || "Gagal menukarkan point.", type: "error" });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Gagal menukarkan point.";
+      setMessage({ text: errorMessage, type: "error" });
     } finally {
       setRedeemingId(null);
       setTimeout(() => setMessage(null), 5000);

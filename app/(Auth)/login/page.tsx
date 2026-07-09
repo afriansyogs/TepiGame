@@ -1,10 +1,10 @@
 "use client";
-
+ 
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Sparkles, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { signInWithEmail, signInWithGoogle } from "@/services/authService";
 import { GoogleButton } from "@/components/ui/GoogleButton";
 
@@ -38,8 +38,10 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      await signInWithGoogle();
-      router.push("/");
+      const user = await signInWithGoogle();
+      if (user) {
+        router.push("/");
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

@@ -161,7 +161,7 @@ export default function ProductPage() {
             <Frown className="w-16 h-16 text-gray-300 mb-4" />
             <h3 className="text-xl font-bold text-gray-900 mb-2">Game tidak ditemukan</h3>
             <p className="text-gray-500 max-w-md">
-              Kami tidak dapat menemukan game yang cocok dengan pencarian "{debouncedQuery}" pada filter {activeFilter}. Coba gunakan kata kunci lain.
+              Kami tidak dapat menemukan game yang cocok dengan pencarian &quot;{debouncedQuery}&quot; pada filter {activeFilter}. Coba gunakan kata kunci lain.
             </p>
             <button 
               onClick={() => {
