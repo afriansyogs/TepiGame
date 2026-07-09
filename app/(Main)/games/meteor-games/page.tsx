@@ -8,6 +8,9 @@ import React, {
 } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { getUserProfile, updateHighScore as syncHighScoreToDb, addPoints } from "@/services/userService";
 
 import TopHud from "@/components/features/meteor-games/TopHud";
 import PauseMenu from "@/components/features/meteor-games/PauseMenu";
@@ -57,6 +60,26 @@ export default function MeteorGamesPage() {
   const [timeDisplay, setTimeDisplay] = useState(GAME_DURATION_S);
   const [highScore, setHighScore] = useState(0);
   const [finalScore, setFinalScore] = useState(0);
+
+  useEffect(() => {
+    let localHigh = getHighScore();
+    setHighScore(localHigh);
+
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        try {
+          const profile = await getUserProfile(currentUser.uid);
+          if (profile && profile.meteorGameHighScore > localHigh) {
+            setHighScore(profile.meteorGameHighScore);
+            saveHighScore(profile.meteorGameHighScore);
+          }
+        } catch (error) {
+          console.error("Failed to fetch high score from DB:", error);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const arenaRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
@@ -152,8 +175,24 @@ export default function MeteorGamesPage() {
     meteorsRef.current = [];
 
     const finalS = scoreRef.current;
+    
     saveHighScore(finalS);
-    setHighScore(getHighScore());
+    
+    setHighScore(prev => {
+      const newHigh = Math.max(prev, finalS);
+      if (auth.currentUser) {
+        if (finalS > prev) {
+          syncHighScoreToDb(auth.currentUser.uid, finalS).catch(console.error);
+        }
+        
+        const earnedPoints = Math.floor(finalS / 30) * 20;
+        if (earnedPoints > 0) {
+          addPoints(auth.currentUser.uid, earnedPoints).catch(console.error);
+        }
+      }
+      return newHigh;
+    });
+
     setFinalScore(finalS);
     setGameState("GAMEOVER");
   }, []);

@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { auth } from "@/lib/firebase";
+import { syncUserProfile } from "./userService";
 
 const getAuthErrorMessage = (error: unknown): string => {
   if (error instanceof FirebaseError) {
@@ -35,10 +36,27 @@ const getAuthErrorMessage = (error: unknown): string => {
   return "Terjadi kesalahan yang tidak diketahui.";
 };
 
+const setSessionCookie = async (user: any) => {
+  const idToken = await user.getIdToken();
+  const response = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ idToken })
+  });
+  if (!response.ok) throw new Error("Gagal menginisialisasi sesi server.");
+};
+
+const clearSessionCookie = async () => {
+  const response = await fetch("/api/auth/logout", { method: "POST" });
+  if (!response.ok) console.warn("Failed to clear server session");
+};
+
 export const signInWithGoogle = async () => {
   try {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
+    await syncUserProfile(result.user);
+    await setSessionCookie(result.user);
     return result.user;
   } catch (error: unknown) {
     throw new Error(getAuthErrorMessage(error));
@@ -48,6 +66,8 @@ export const signInWithGoogle = async () => {
 export const signUpWithEmail = async (email: string, password: string) => {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password);
+    await syncUserProfile(result.user);
+    await setSessionCookie(result.user);
     return result.user;
   } catch (error: unknown) {
     throw new Error(getAuthErrorMessage(error));
@@ -57,6 +77,8 @@ export const signUpWithEmail = async (email: string, password: string) => {
 export const signInWithEmail = async (email: string, password: string) => {
   try {
     const result = await signInWithEmailAndPassword(auth, email, password);
+    await syncUserProfile(result.user);
+    await setSessionCookie(result.user);
     return result.user;
   } catch (error: unknown) {
     throw new Error(getAuthErrorMessage(error));
@@ -65,6 +87,7 @@ export const signInWithEmail = async (email: string, password: string) => {
 
 export const logOut = async () => {
   try {
+    await clearSessionCookie();
     await signOut(auth);
   } catch (error: unknown) {
     throw new Error(getAuthErrorMessage(error));

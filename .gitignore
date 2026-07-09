@@ -40,3 +40,5 @@ RULES.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+firebase_schema_recommendations.md
